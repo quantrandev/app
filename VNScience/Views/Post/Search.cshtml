@@ -1,0 +1,117 @@
+﻿@model IEnumerable<VNScience.ViewModels.PostViewModel>
+@using VNScience.Common
+
+@{
+    ViewBag.Title = "Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-md-12 col-lg-8">
+
+    <h4 class="p-title">Kết quả tìm kiếm cho <b>"@ViewBag.SearchString"</b></h4>
+    <div class="row" id="js-posts-container">
+
+        @foreach (var post in Model)
+        {
+            <div class="col-sm-6">
+                <img src="@post.CoverImage" alt="">
+                <h4 class="pt-20"><a href="/tin-tuc/@post.MetaTitle-@post.Id"><b>@post.Title</b></a></h4>
+                <ul class="list-li-mr-20 pt-10 mb-30">
+                    <li class="color-lite-black">
+                        by <a href="#" class="color-black"><b>@post.CreatingUser.FullName,</b></a>
+                        @DateTimeHelper.FormatDate(post.CreatedAt.Value)
+                    </li>
+                    <li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i>@post.ViewCount</li>
+                    @*<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i>47</li>*@
+                </ul>
+            </div><!-- col-sm-6 -->
+        }
+
+    </div><!-- row -->
+
+    @if (ViewBag.IsAnyLeft)
+    {
+        <a class="dplay-block btn-brdr-primary mt-20 mb-md-50" href="javascript:void(0)" data-search-string="@ViewBag.SearchString" data-next-page="2" data-page-size="8" id="js-view-more"><b>XEM THÊM</b></a>
+    }
+</div><!-- col-md-9 -->
+
+@section page_header {
+    <section class="ptb-0">
+        <div class="mb-30 brdr-ash-1 opacty-5"></div>
+        <div class="container">
+            <a class="mt-10" href="index.html"><i class="mr-5 ion-ios-home"></i>Trang chủ<i class="mlr-10 ion-chevron-right"></i></a>
+            <a class="mt-10 color-ash" href="archive-page.html">Kết quả tìm kiếm cho "@ViewBag.SearchString"</a>
+        </div><!-- container -->
+    </section>
+}
+
+@section scripts {
+    @*<script src="~/Assets/imakewebthings-waypoints-34d9f6d/lib/jquery.waypoints.min.js"></script>*@
+    <script>
+
+        $(function () {
+            $('#js-view-more').on('click', function () {
+                LoadMore();
+            });
+
+            function LoadMore() {
+                var button = $('#js-view-more');
+                var nextPage = button.attr('data-next-page');
+                //point to next page
+                button.attr('data-next-page', parseInt(button.attr('data-next-page')) + 1);
+
+                ToggleButton(button, 'loading');
+                $.ajax({
+                    url: '/Post/SearchPaging?searchString='+button.attr('data-search-string')+'&page=' + nextPage + "&pageSize=" + button.attr('data-page-size'),
+                    type: 'get',
+                    success: function (res) {
+                        if (res.status != 200) return;
+                        var recentPosts = res.data;
+                        //render html
+                        for (const post of recentPosts) {
+                            var newPost = `
+                                <div class="col-sm-6 animated fadeIn">
+                                    <img src="`+ post.CoverImage + `" alt="">
+                                    <h4 class="pt-20 font-11"><a href="/tin-tuc/`+ post.MetaTitle + `-` + post.Id +`"><b>`+ post.Title + `</b></a></h4>
+                                    <ul class="list-li-mr-20 pt-10 mb-30">
+                                        <li class="color-lite-black">
+                                            by <a href="#" class="color-black"><b>`+ post.Author + `,</b></a>
+                                            `+ post.Time + `
+                                        </li>
+                                        <li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i>`+ post.ViewCount + `</li>
+                                        @*<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i>47</li>*@
+                                    </ul>
+                                </div>
+                            `;
+
+                            $('#js-posts-container').append(newPost);
+                        }
+
+                        if (!res.isAnyLeft)
+                            ToggleButton(button, 'hide');
+                        else
+                            ToggleButton(button, 'loaded');
+                    }
+                });
+
+
+            }
+
+            function ToggleButton(button, type) {
+                switch (type) {
+                    case 'loading':
+                        button.html('<i class="fa-spinner fa fa-spin"></i>');
+                        break;
+                    case 'loaded':
+                        button.html('<b>XEM THÊM</b>');
+                        break;
+                    case 'hide':
+                        button.remove();
+                        break;
+                }
+            }
+        });
+    </script>
+}
+
+

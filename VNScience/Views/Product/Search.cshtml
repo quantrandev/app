@@ -1,0 +1,70 @@
+﻿@using VNScience.Models.Core
+@using VNScience.Common
+@{
+    ViewBag.Title = "Search";
+    Layout = "~/Views/Shared/_LayoutWithoutAds.cshtml";
+    var products = (List<ProductCategory>)ViewBag.Products;
+    var news = (List<Post>)ViewBag.News;
+}
+
+@if (products.Count > 0)
+{
+    <div class="col-md-12 mb-30">
+        <h4 class="p-title" style="margin-bottom: 10px"><i class="fa fa-folder"></i> <b>SẢN PHẨM - GIẢI PHÁP</b></h4>
+        @foreach (var product in products)
+        {
+            <div class="row mb-30">
+                <div class="col-md-2">
+                    <a href="/san-pham-giai-phap/@StringHelper.ToUnsignString(product.Name).ToLower()-@product.Id" style="display: block"><img src="@product.CoverImage" alt="Alternate Text" /></a>
+                </div>
+                <div class="col-md-10">
+                    <h4>
+                        <a href="/san-pham-giai-phap/@StringHelper.ToUnsignString(product.Name).ToLower()-@product.Id"><b>@product.Name</b></a>
+                    </h4>
+                    <div style="font-size: 12px">
+                        @Html.Raw(product.Description.Substring(0, product.Description.IndexOf("</p>"))
+                       .Replace("<h2>", "<p>")
+                       .Replace("</h2>", "</p>")
+                        .Replace("<h3>", "<p>")
+                       .Replace("</h3>", "</p>")
+                        .Replace("<h1>", "<p>")
+                       .Replace("</h1>", "</p>"))
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@if (news.Count > 0)
+{
+    <div class="col-md-12 mb-30">
+        <h4 class="p-title" style="margin-bottom: 10px"><i class="fa fa-newspaper-o"></i> <b>TIN TỨC - HOẠT ĐỘNG</b></h4>
+        @foreach (var item in news)
+        {
+            <div class="row mb-30">
+                <div class="col-md-2">
+                    <a href="/tin-hoat-dong/@item.MetaTitle-@item.Id" style="display: block"><img src="@item.CoverImage" alt="Alternate Text" /></a>
+                </div>
+                <div class="col-md-10">
+                    <h4>
+                        <a href="/san-pham-giai-phap/@item.MetaTitle-@item.Title"><b>@item.Title</b></a>
+                    </h4>
+                    <div style="font-size:  12px;">
+                        @Html.Raw(item.Summary)
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@section page_header {
+    <section class="ptb-0">
+        <div class="mb-30 brdr-ash-1 opacty-5"></div>
+        <div class="container">
+            <a class="mt-10" href="/"><i class="mr-5 ion-ios-home"></i>Trang chủ<i class="mlr-10 ion-chevron-right"></i></a>
+            <a class="mt-10 color-ash" href="/">Kết quả tìm kiếm cho "<b>@ViewBag.SearchString</b>"</a>
+        </div><!-- container -->
+    </section>
+}

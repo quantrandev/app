@@ -1,0 +1,89 @@
+﻿@using VNScience.Models.Core
+@using VNScience.Common
+@using VNScience.ViewModels
+@{ 
+    var socialLinks = (SystemInfoViewModel)ViewBag.SocialLinks;
+}
+<header>
+    <div class="bg-191">
+        <div class="container">
+            <div class="oflow-hidden color-ash font-9 text-sm-center ptb-sm-5">
+
+                <ul class="float-left float-sm-none list-a-plr-10 list-a-plr-sm-5 list-a-ptb-15 list-a-ptb-sm-10">
+                    @foreach (var item in (List<Menu>)ViewBag.TopMenus)
+                    {
+                        <li><a href="@item.Link" target="@item.Target">@item.Title</a></li>
+                    }
+                </ul>
+                <ul class="float-right float-sm-none list-a-plr-10 list-a-plr-sm-5 list-a-ptb-15 list-a-ptb-sm-5">
+                    <li><a class="pl-0 pl-sm-10" href="@socialLinks.Facebook"><i class="ion-social-facebook"></i></a></li>
+                    <li><a class="pl-0 pl-sm-10" href="@socialLinks.Linkedin"><i class="ion-social-linkedin"></i></a></li>
+                    <li><a class="pl-0 pl-sm-10" href="@socialLinks.Youtube"><i class="ion-social-youtube"></i></a></li>
+                </ul>
+
+            </div><!-- top-menu -->
+        </div><!-- container -->
+    </div><!-- bg-191 -->
+
+    <div class="container">
+        <a class="logo" href="/"><img src="@ViewBag.Logo" alt="Logo"></a>
+
+        <a class="right-area src-btn" href="#">
+            <i class="active src-icn ion-search"></i>
+            <i class="close-icn ion-close"></i>
+        </a>
+        <div class="src-form">
+            <form action="/Product/Search/" method="get">
+                <input type="text" name="searchString" placeholder="Tìm kiếm ...">
+                <button type="submit"><i class="ion-search"></i></button>
+            </form>
+        </div><!-- src-form -->
+
+        <a class="menu-nav-icon" data-menu="#main-menu" href="#"><i class="ion-navicon"></i></a>
+
+        <ul class="main-menu" id="main-menu">
+            <li class="drop-down">
+                <a href="/gioi-thieu">GIỚI THIỆU <i class="ion-arrow-down-b"></i></a>
+                <ul class="drop-down-menu drop-down-inner">
+                    <li><a href="/gioi-thieu">VỀ CHÚNG TÔI</a></li>
+                    <li><a href="/tin-hoat-dong">TIN HOẠT ĐỘNG</a></li>
+                    <li><a href="/tuyen-dung">TUYỂN DỤNG</a></li>
+                </ul>
+            </li>
+            <li class="drop-down">
+                <a href="#">
+                    SẢN PHẨM - GIẢI PHÁP
+                    <i class="ion-arrow-down-b"></i>
+                </a>
+                <ul class="drop-down-menu drop-down-inner">
+                    @foreach (var item in (List<ProductCategory>)ViewBag.Categories)
+                    {
+                        if (item.Children.Count > 0)
+                        {
+                            <li class="dropdown">
+                                <a href="/san-pham-giai-phap/@StringHelper.ToUnsignString(item.Name).ToLower()-@item.Id">
+                                    @item.Name.ToUpper()
+                                    <i class="ion-arrow-right-b"></i>
+                                </a>
+                                <ul class="drop-down-menu drop-down-third">
+                                    @foreach (var child in item.Children)
+                                    {
+                                        <li><a href="/san-pham-giai-phap/@StringHelper.ToUnsignString(child.Name).ToLower()-@child.Id">@child.Name.ToUpper()</a></li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li><a href="/san-pham-giai-phap/@StringHelper.ToUnsignString(item.Name).ToLower()-@item.Id">@item.Name.ToUpper()</a></li>
+                        }
+                    }
+                </ul>
+            </li>
+            <li><a href="/doi-tac">ĐỐI TÁC</a></li>
+            <li><a href="/lien-he">LIÊN HỆ</a></li>
+        </ul>
+        <div class="clearfix"></div>
+    </div><!-- container -->
+</header>
+

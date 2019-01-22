@@ -1,0 +1,15 @@
+﻿@model VNScience.Models.Core.ProductCategory
+@using VNScience.Common
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutWithoutAds.cshtml";
+}
+
+<div class="col-sm-12 col-md-12">
+    <h3 class="mb-30 mr-100 mr-sm-0"><b>@Model.Name</b></h3>
+
+    <div class="content-container">
+        @Html.Raw(Model.Description)
+    </div>
+</div>
+

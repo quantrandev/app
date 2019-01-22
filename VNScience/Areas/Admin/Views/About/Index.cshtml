@@ -1,0 +1,219 @@
+﻿@model IEnumerable<VNScience.Models.Core.About>
+@using VNScience.Common
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div class="">
+    <div class="row">
+        <!-- form input mask -->
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Giới thiệu công ty <small><a href="/Admin/About/Create/"><i class="fa fa-plus-square-o"></i> Thêm thông tin giới thiệu</a></small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                        <li>
+                            <a class="close-link"><i class="fa fa-close"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content no-padding">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Content)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.IsDisplayed)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CreatedAt)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CreatedBy)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.UpdatedAt)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.UpdatedBy)
+                            </th>
+                            <th></th>
+                        </tr>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.Raw(item.Content.Substring(0, item.Content.IndexOf("</p>")))
+                                </td>
+                                <td>
+                                    @if (item.IsDisplayed.Value)
+                                    {
+                                        <span class="label label-success">Hiển thị</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-danger">Không hiển thị</span>
+                                    }
+                                </td>
+                                <td>
+                                    @DateTimeHelper.FormatDate(item.CreatedAt)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CreatingUser.FullName)
+                                </td>
+                                <td>
+                                    @if (item.UpdatedAt.HasValue)
+                                    {
+                                        @(DateTimeHelper.FormatDate(item.UpdatedAt.Value))
+                                    }
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.UpdatingUser.FullName)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Sửa", "Edit", new { id = item.Id }) |
+                                    <a href="#" class="js-view-content" data-target="#md-content" data-toggle="modal" data-id="@item.Id">Chi tiết</a> |
+                                    @Html.ActionLink("Xóa", "Delete", new { id = item.Id }, new { @class = "js-delete", @data_id = item.Id })
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- /form input mask -->
+    </div>
+</div>
+
+<div id="md-content" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Nội dung bài viết</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $('.js-delete').on('click', function (e) {
+            e.preventDefault();
+
+            var button = $(this);
+            bootbox.confirm("Xóa tin giới thiệu này?", function (result) {
+                if (!result)
+                    return;
+
+                button.closest('tr').remove();
+                $.ajax({
+                    url: '/Admin/About/Delete/' + button.attr('data-id'),
+                    type: 'post',
+                    success: function (res) {
+                        if (res.status == 200)
+                            new PNotify({
+                                title: 'Thông báo',
+                                text: 'Đã xóa thành công tin giới thiệu',
+                                type: 'success',
+                                styling: 'bootstrap3',
+                                animate: {
+                                    animate: true,
+                                    in_class: 'slideInDown',
+                                    out_class: 'slideOutUp'
+                                },
+                                delay: 2500
+                            });
+                        else
+                            new PNotify({
+                                title: 'Thông báo',
+                                text: 'Có lỗi xảy ra, vui lòng thử lại sau',
+                                type: 'error',
+                                styling: 'bootstrap3',
+                                animate: {
+                                    animate: true,
+                                    in_class: 'slideInDown',
+                                    out_class: 'slideOutUp'
+                                },
+                                delay: 2500
+                            });
+                    },
+                    error: function (err) {
+                        new PNotify({
+                            title: 'Thông báo',
+                            text: 'Có lỗi xảy ra, vui lòng thử lại sau',
+                            type: 'error',
+                            styling: 'bootstrap3',
+                            animate: {
+                                animate: true,
+                                in_class: 'slideInDown',
+                                out_class: 'slideOutUp'
+                            },
+                            delay: 2500
+                        });
+                    }
+                });
+            })
+        });
+
+        $('.js-view-content').on('click', function (e) {
+            e.preventDefault();
+
+            var button = $(this);
+            $.ajax({
+                url: '/Admin/About/Content/' + button.attr('data-id'),
+                type: 'get',
+                success: function (res) {
+                    if (res.status == 200)
+                        $('#md-content').find('.modal-body').html(res.data);
+                    else
+                        new PNotify({
+                            title: 'Thông báo',
+                            text: 'Có lỗi xảy ra, vui lòng thử lại sau',
+                            type: 'error',
+                            styling: 'bootstrap3',
+                            animate: {
+                                animate: true,
+                                in_class: 'slideInDown',
+                                out_class: 'slideOutUp'
+                            },
+                            delay: 2500
+                        });
+                },
+                error: function (err) {
+                    new PNotify({
+                        title: 'Thông báo',
+                        text: 'Có lỗi xảy ra, vui lòng thử lại sau',
+                        type: 'error',
+                        styling: 'bootstrap3',
+                        animate: {
+                            animate: true,
+                            in_class: 'slideInDown',
+                            out_class: 'slideOutUp'
+                        },
+                        delay: 2500
+                    });
+                }
+            });
+        });
+    </script>
+}
+
+
+

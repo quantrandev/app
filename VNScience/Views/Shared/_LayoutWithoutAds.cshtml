@@ -1,0 +1,126 @@
+﻿<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <title>Newsbit</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css?family=Encode+Sans+Expanded:400,600,700" rel="stylesheet">
+
+    <!-- Stylesheets -->
+
+    <link href="/Assets/plugin-frameworks/bootstrap.css" rel="stylesheet">
+
+    <link href="/Assets/fonts/ionicons.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="~/Areas/Admin/Assets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="~/Assets/animate.css/animate.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="~/Assets/slick-1.8.1/slick/slick.css" />
+    <link rel="stylesheet" type="text/css" href="~/Assets/slick-1.8.1/slick/slick-theme.css" />
+
+    <link href="/Assets/common/styles.css" rel="stylesheet">
+    <style>
+        .content-container > p {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .PhotoCMS_Caption {
+            text-align: center;
+        }
+
+        .VCSortableInPreviewMode a {
+            display: inline-block;
+            margin: auto;
+        }
+
+        .drop-down-third {
+            position: absolute;
+            top: 0;
+            left: 100%;
+            min-width: 250px;
+            box-shadow: 0px 3px 10px rgba(0,0,0,.3);
+            background: #fff;
+            display: none;
+        }
+
+        .dropdown:hover > .drop-down-menu {
+            display: block !important;
+        }
+
+        .drop-down-menu {
+            min-width: 300px !important;
+        }
+
+        .slides-container a {
+            width: 100% !important;
+        }
+
+        .big-title {
+            color: #F9B500;
+            font-weight: 800;
+        }
+
+        footer p {
+            color: #cccccc;
+        }
+
+        footer h4 {
+            color: #F9B500;
+        }
+
+        .recruitment li {
+            margin: 5px 0;
+            font-size: 13px;
+        }
+            .recruitment li > ul li {
+                list-style: circle !important;
+                display: block;
+            }
+
+            .recruitment li p {
+                margin: 5px 0;
+                font-size: 13px;
+            }
+    </style>
+</head>
+<body>
+
+    @{
+        Html.RenderAction("Header", "Common", new { area = "" });
+    }
+
+    @RenderSection("page_header", false)
+
+    <section>
+        <div class="container">
+            <div class="row">
+                @RenderBody()<!-- row -->
+            </div>
+        </div><!-- container -->
+    </section>
+
+
+    @{
+        Html.RenderAction("Footer", "Common", new { area = "" });
+    }
+
+    <!-- SCIPTS -->
+
+    <script src="/Assets/plugin-frameworks/jquery-3.2.1.min.js"></script>
+
+    <script type="text/javascript" src="~/Assets/slick-1.8.1/slick/slick.min.js"></script>
+
+    <script src="/Assets/plugin-frameworks/tether.min.js"></script>
+
+    <script src="/Assets/plugin-frameworks/bootstrap.js"></script>
+
+    <script src="/Assets/common/scripts.js"></script>
+
+    @RenderSection("scripts", false)
+</body>
+</html>

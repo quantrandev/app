@@ -1,0 +1,77 @@
+﻿@using VNScience.Models.Core
+@using VNScience.ViewModels
+@{
+    var bottomMenus = (List<Menu>)ViewBag.BottomMenus;
+    var socialLinks = (SystemInfoViewModel)ViewBag.SocialLinks;
+    var contactInfo = (SystemInfoViewModel)ViewBag.ContactInfo;
+    var hotNews = (List<Post>)ViewBag.HotNews;
+    var recruitments = (List<Recruitment>)ViewBag.Recruitments;
+}
+<footer class="bg-191 color-ccc">
+
+    <div class="container">
+        <div class="pt-50 pb-20 pos-relative">
+            <div class="abs-tblr pt-50 z--1 text-center">
+                <div class="h-80 pos-relative"><img class="opacty-1 h-100 w-auto" src="images/map.png" alt=""></div>
+            </div>
+            <div class="row">
+
+                <div class="col-sm-4">
+                    <h5 class="mb-20 color-primary"><b>@contactInfo.CompanyFullName.ToUpper()</b></h5>
+                    <p class="mb-10"><i class="ion-ios-location mr-10"></i> Trụ sở chính: @contactInfo.Headquater</p>
+                    <p class="mb-10"><i class="ion-android-phone-portrait mr-10"></i> Hotline: @contactInfo.Hotline</p>
+                    <p class="mb-10"><i class="ion-android-mail mr-10"></i> Email: @contactInfo.Email</p>
+                    <p class="mb-10"><i class="ion-android-globe mr-10"></i> Website: @contactInfo.Website</p>
+                </div><!-- col-md-4 -->
+
+                <div class="col-sm-4">
+                    <div class="mb-30">
+                        <h5 class="color-primary mb-20"><b>TIN TỨC - HOẠT ĐỘNG</b></h5>
+                        @foreach (var item in hotNews.Skip(0).Take(3))
+                        {
+                            <div class="mb-20">
+                                <a class="color-white" href="/tin-hoat-dong/@item.MetaTitle-@item.Id"><b>@item.Title</b></a>
+                                <h6 class="mt-10">@item.CreatedAt.Value.ToString("dd/MM/yyyy")</h6>
+                            </div>
+                        }
+                    </div><!-- mb-30 -->
+                </div>
+                <div class="col-sm-4">
+                    <div class="mb-30">
+                        <h5 class="color-primary mb-20"><b>TUYỂN DỤNG</b></h5>
+                        @foreach (var item in recruitments)
+                        {
+                            <div class="mb-20">
+                                <a class="color-white" href="/tuyen-dung/@item.MetaTitle-@item.Id"><b>@item.Title</b></a>
+                                <h6 class="mt-10">@item.CreatedAt.Value.ToString("dd/MM/yyyy")</h6>
+                            </div>
+                        }
+                    </div><!-- mb-30 -->
+                </div>
+            </div><!-- row -->
+        </div><!-- ptb-50 -->
+
+        <div class="brdr-ash-1 opacty-2"></div>
+
+        <div class="oflow-hidden color-ash font-9 text-sm-center ptb-sm-5">
+
+            <ul class="float-left float-sm-none list-a-plr-10 list-a-plr-sm-5 list-a-ptb-15 list-a-ptb-sm-10">
+                @foreach (var item in bottomMenus)
+                {
+                    <li><a href="@item.Link" target="@item.Target">@item.Title</a></li>
+                }
+            </ul>
+            <div class="float-right">
+                <ul class="float-sm-none list-a-plr-10 list-a-plr-sm-5 list-a-ptb-15 list-a-ptb-sm-5 text-right">
+                    <li><a class="pl-0 pl-sm-10" href="@socialLinks.Facebook"><i class="ion-social-facebook"></i></a></li>
+                    <li><a class="pl-0 pl-sm-10" href="@socialLinks.Youtube"><i class="ion-social-youtube"></i></a></li>
+                    <li><a class="pl-0 pl-sm-10" href="@socialLinks.Linkedin"><i class="ion-social-linkedin"></i></a></li>
+                </ul>
+                <div>
+                    © @DateTime.Now.Year @ViewBag.Brand. All Rights Reserved.
+                </div>
+            </div>
+
+        </div><!-- oflow-hidden -->
+    </div><!-- container -->
+</footer>
